@@ -1,0 +1,93 @@
+#!/bin/sh
+
+# note taking and managing application in shell
+# dependencies: vi/vim/nvim, fzf, lynx, pandoc
+
+NOTES_DIR="$HOME"/notes
+EDITOR=nvim
+
+edit_note(){
+FILE="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse)"
+if [ -z "$FILE" ]; then
+   menu
+else
+   "$EDITOR" "$FILE"
+fi
+}
+
+create_note(){
+read -rp "give a name to your note (include extension) : " newnote
+$EDITOR "$NOTES_DIR"/"$newnote"
+}
+
+view_note(){
+FILEV="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse)"
+if [ -z "$FILEV" ]; then
+   menu
+else
+   pandoc -t html "$FILEV" | lynx -stdin
+fi
+}
+
+del_note(){
+FILED="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse)"
+if [ -z "$FILED" ]; then
+   menu
+else
+   rm -iv "$FILED"
+fi
+}
+
+rename_note(){
+FILERN="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse)"
+if [ -z "$FILERN" ]; then
+   menu
+else
+    read -rp "renaming "$FILERN" : " newname
+    mv -iv "$FILERN" "$NOTES_DIR"/"$newname"
+fi
+}
+
+menu() {
+    printf "%b" "
+$APP_NAME NOTES MENU
+        1) select a note to edit
+        2) view notes in markdown
+        3) new note
+        4) delete a note
+        5) rename a note
+        0) exit
+Choose an option:"
+    read -r ans
+    case $ans in
+    1)
+	edit_note
+	menu
+        ;;
+    2)
+        view_note
+        menu
+        ;;
+    3)
+        create_note
+        menu
+        ;;
+    4)
+        del_note
+        menu
+        ;;
+    5)
+        rename_note
+        menu
+        ;;
+    0)
+        exit 0
+        ;;
+    *)
+        echo 'Wrong option.'
+        menu
+        ;;
+    esac
+}
+
+menu
