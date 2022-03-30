@@ -7,7 +7,7 @@ NOTES_DIR="$HOME"/notes
 EDITOR=nvim
 
 edit_note(){
-FILE="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse)"
+FILE="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse --preview 'batcat --style=numbers --color=always {}')"
 if [ -z "$FILE" ]; then
    menu
 else
@@ -21,7 +21,7 @@ $EDITOR "$NOTES_DIR"/"$newnote"
 }
 
 view_note(){
-FILEV="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse)"
+FILEV="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse --preview 'batcat --style=numbers --color=always {}')"
 if [ -z "$FILEV" ]; then
    menu
 else
@@ -30,7 +30,7 @@ fi
 }
 
 del_note(){
-FILED="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse)"
+FILED="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse --preview 'batcat --style=numbers --color=always {}')"
 if [ -z "$FILED" ]; then
    menu
 else
@@ -39,7 +39,7 @@ fi
 }
 
 rename_note(){
-FILERN="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse)"
+FILERN="$(du -a "$NOTES_DIR" | cut -f1  --complement | fzf --reverse --preview 'batcat --style=numbers --color=always {}')"
 if [ -z "$FILERN" ]; then
    menu
 else
